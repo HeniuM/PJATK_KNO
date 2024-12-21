@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import os
 import itertools
 
-# Wczytaj dane i przetasuj je
+
 dataset = pd.read_csv("wine.data", header=None)
 dataset.columns = [
     "class", "Alcohol", "Malicacid", "Ash", "Alcalinity_of_ash", "Magnesium", "Total_phenols",
@@ -23,6 +23,7 @@ train_dataframe = dataset.sample(frac=0.6, random_state=1337)
 remaining_dataframe = dataset.drop(train_dataframe.index)
 val_dataframe = remaining_dataframe.sample(frac=0.5, random_state=1337)
 test_dataframe = remaining_dataframe.drop(val_dataframe.index)
+
 
 # Funkcja konwertująca DataFrame do formatu tf.data.Dataset
 def dataframe_to_dataset(dataframe, loss_function):
@@ -38,6 +39,7 @@ def dataframe_to_dataset(dataframe, loss_function):
     ds = ds.shuffle(buffer_size=len(dataframe)).batch(32)
     return ds
 
+
 # Funkcja tworząca model sieci neuronowej
 def create_model(input_shape, layer_config, dropout_rate=0.0):
     model = keras.Sequential()
@@ -48,6 +50,7 @@ def create_model(input_shape, layer_config, dropout_rate=0.0):
             model.add(Dropout(dropout_rate))
     model.add(Dense(3, activation='softmax'))  # Warstwa wyjściowa
     return model
+
 
 # Definicje układów warstw dla obu modeli
 layer_config_1 = [
@@ -72,6 +75,7 @@ results = []
 
 # Generowanie wszystkich kombinacji parametrów
 combinations = list(itertools.product(learning_rates, dropout_rates, loss_functions))
+
 
 # Funkcja do trenowania i ewaluacji modelu
 def train_and_evaluate_model(model, train_ds, val_ds, test_ds, lr, dropout_rate, model_name, loss):
@@ -110,6 +114,7 @@ def train_and_evaluate_model(model, train_ds, val_ds, test_ds, lr, dropout_rate,
         'test_accuracy': test_acc,
         'test_loss': test_loss
     }
+
 
 # Trenowanie modeli z różnymi kombinacjami parametrów
 for lr, dropout_rate, loss_function in combinations:
